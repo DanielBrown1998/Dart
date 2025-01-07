@@ -1,5 +1,3 @@
-import 'dart:ffi';
-import 'dart:math';
 
 class MathBot {
   String expression = '';
