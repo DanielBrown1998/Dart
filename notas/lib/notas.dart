@@ -12,26 +12,30 @@ class Notas {
     listarComandos();
     while (true) {
       print('Digite o comando:');
-      var comando = int.parse(stdin.readLineSync()!);
-      if (comando == 9) {
+      var comando = stdin.readLineSync()?.trim();
+      if (comando == null || comando.isEmpty) {
+        print('Comando inválido');
+        continue;
+      }
+      if (comando == "9") {
         print("Saindo...");
         print("Até mais !!!");
         break;
       }
       switch (comando) {
-        case 1:
+        case "1":
           print('Digite o nome do aluno:');
           var aluno = stdin.readLineSync()!;
           adicionarAluno(aluno);
           break;
-        case 2:
+        case "2":
           print('Digite o nome do aluno:');
           var aluno = stdin.readLineSync()!;
           print('Digite a nota:');
           var nota = double.parse(stdin.readLineSync()!);
           adicionarNota(aluno, nota);
           break;
-        case 3:
+        case "3":
           print('Digite o nome do aluno:');
           var aluno = stdin.readLineSync()!;
           try{
@@ -40,7 +44,7 @@ class Notas {
             print("Error: $e");
           }
           break;
-        case 4:
+        case "4":
           print('Digite o nome do aluno:');
           var aluno = stdin.readLineSync()!;
           while (!buscarAluno(aluno)) {
@@ -52,16 +56,16 @@ class Notas {
           var nota = double.parse(stdin.readLineSync()!);
           removerNota(aluno, nota);
           break;
-        case 5:
+        case "5":
           listarAlunos();
           break;
-        case 6:
+        case "6":
           listarNotas();
           break;
-        case 7:
+        case "7":
           listarMedias();
           break;
-        case 8:
+        case "8":
           listarConceitos();
           break;
         default:
@@ -109,6 +113,7 @@ class Notas {
       _notas[aluno] = [];
     }
     _notas[aluno]!.add(nota);
+    print('Nota adicionada');
   }
 
   void removerNota(String aluno, double nota) {
