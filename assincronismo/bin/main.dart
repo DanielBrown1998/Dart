@@ -1,9 +1,18 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:assincronismo/api_key.dart' as key;
 
+StreamController<String> streamController = StreamController<String>();
+
 void main() async {
+  StreamSubscription subscription = streamController.stream.listen(
+    (String data) {
+      print(data);
+    },
+  );
+
   requestData();
   sendData();
 }
@@ -14,7 +23,7 @@ requestData() async {
   http.Response response = await http.get(Uri.parse(url));
   List<dynamic> file = json.decode(response.body);
   for (Map<String, dynamic> item in file) {
-    print(item);
+    streamController.add("${DateTime.now()} -  Requisição de leitura do dado ${item['id']}");
   }
 }
 
@@ -22,11 +31,11 @@ sendData({Map<String, dynamic>? mapAccount}) async {
   String url = 'https://api.github.com/gists/2e08120282bc3f5c4160b6ba56b2cef1';
 
   mapAccount ??= {
-      "id": "NewID001",
-      "name": "NewName",
-      "lastName": "NewLastName",
-      "balance": 0.0,
-    };
+    "id": "NewID001",
+    "name": "NewName",
+    "lastName": "NewLastName",
+    "balance": 0.0,
+  };
 
   String gist =
       "https://gist.githubusercontent.com/DanielBrown1998/2e08120282bc3f5c4160b6ba56b2cef1/raw/528d5e9dcafd230b537d7ef48dd1f35da638aa5a/accounts.json";
@@ -50,8 +59,12 @@ sendData({Map<String, dynamic>? mapAccount}) async {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ${key.githubApiKey}',
       });
-      print("POST: ${response.request?.method}");
-  print("SAVE STATUS ${response.statusCode}");
+  if (response.statusCode.toString().startsWith('2')) {
+    streamController.add("${DateTime.now()} -  Requisição de escrita do dado ${mapAccount['id']} realizada com sucesso");
+  }else{
+    streamController.add("${DateTime.now()} -  Requisição de escrita do dado ${mapAccount['id']} falhou");
+
+  }
 }
 
 Future<void> requestReceitas() async {
