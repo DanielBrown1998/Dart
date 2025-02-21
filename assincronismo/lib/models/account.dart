@@ -66,20 +66,7 @@ class Account {
     );
   }
 
-  toJson() {
-    return json.encode({
-      'id': id,
-      'name': name,
-      'lastname': lastname,
-      'balance': balance,
-    });
-  }
+  toJson() => json.encode(toMap());
 
-  fromJson(String jsonFile) {
-    var map = json.decode(jsonFile);
-    id = map['id'];
-    name = map['name'];
-    lastname = map['lastname'];
-    balance = map['balance'];
-  }
+  factory Account.fromjson(String jsonFile) => Account.fromMap(json.decode(jsonFile));
 }
