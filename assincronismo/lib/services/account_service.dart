@@ -26,24 +26,23 @@ class AccountService {
     return accounts;
   }
 
-  addAccount({Map<String, dynamic>? mapAccount}) async {
-    mapAccount ??= {
-      "id": "NewID001",
-      "name": "NewName",
-      "lastName": "NewLastName",
-      "balance": 0.0,
-    };
+  addAccount({required Account account}) async {
+    List<Account> file = await getAll();
 
-    List<dynamic> file = await getAll();
+    file.add(account);
 
-    file.add(mapAccount);
+    List<Map<String, dynamic>> listContent = [];
+    for (Account item in file) {
+      listContent.add(item.toMap());
+    }
+
     http.Response response = await http.post(Uri.parse(url),
         body: json.encode({
           'description': 'Accounts.json',
           'public': true,
           'files': {
             'accounts.json': {
-              'content': json.encode(file),
+              'content': json.encode(listContent),
             }
           }
         }),
@@ -53,10 +52,99 @@ class AccountService {
         });
     if (response.statusCode.toString().startsWith('2')) {
       _streamController.add(
-          "${DateTime.now()} -  Requisição de escrita do dado ${mapAccount['id']} realizada com sucesso");
+          "${DateTime.now()} -  Requisição de escrita do dado ${account.name} realizada com sucesso");
     } else {
       _streamController.add(
-          "${DateTime.now()} -  Requisição de escrita do dado ${mapAccount['id']} falhou");
+          "${DateTime.now()} -  Requisição de escrita do dado ${account.name} falhou");
+    }
+  }
+
+  getAccountById({required String id}) {
+    getAll().then((listAccount) {
+      for (Account account in listAccount) {
+        if (account.id == id) {
+          return account;
+        }
+      }
+      return null;
+    });
+  }
+
+  updateAccount(Account account) async {
+    List<Map<String, dynamic>> listContent = [];
+
+    getAll().then((listAccount) {
+      for (Account item in listAccount) {
+        if (item.id == account.id) {
+          item = account;
+        }
+        listContent.add(item.toMap());
+      }
+    });
+
+    http.Response response = await http.post(Uri.parse(url),
+        body: json.encode({
+          'description': 'Accounts.json',
+          'public': true,
+          'files': {
+            'accounts.json': {
+              'content': json.encode(listContent),
+            }
+          }
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${key.githubApiKey}',
+        });
+    if (response.statusCode.toString().startsWith('2')) {
+      _streamController.add(
+          "${DateTime.now()} -  Requisição de atualização do dado ${account.name} realizada com sucesso");
+    } else {
+      _streamController.add(
+          "${DateTime.now()} -  Requisição de atualização do dado ${account.name} falhou");
+    }
+  }
+
+  deleteAccount({required String id}) async {
+    List<Map<String, dynamic>> listContent = [];
+
+    bool removed = false;
+
+    getAll().then((listAccount) {
+      for (Account item in listAccount) {
+        if (item.id != id) {
+          listContent.add(item.toMap());
+        }else{
+          removed = true;
+        }
+      }
+    });
+
+    if(!removed){
+      return _streamController.add(
+          "${DateTime.now()} -  $id não encontrado");
+    }
+
+    http.Response response = await http.post(Uri.parse(url),
+        body: json.encode({
+          'description': 'Accounts.json',
+          'public': true,
+          'files': {
+            'accounts.json': {
+              'content': json.encode(listContent),
+            }
+          }
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${key.githubApiKey}',
+        });
+    if (response.statusCode.toString().startsWith('2')) {
+      _streamController.add(
+          "${DateTime.now()} -  Requisição de exclusão do dado ${id} realizada com sucesso");
+    } else {
+      _streamController.add(
+          "${DateTime.now()} -  Requisição de exclusão do dado ${id} falhou");
     }
   }
 }
