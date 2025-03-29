@@ -17,7 +17,7 @@ class Account {
     return Account(
       id: map['id'],
       name: map['name'],
-      lastname: map['lastname'],
+      lastname: map['lastName'],
       balance: map['balance'],
     );
   }
