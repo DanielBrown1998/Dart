@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:assincronismo/models/account.dart';
 import "package:assincronismo/services/account_service.dart";
+import 'package:http/http.dart';
 
 class AccountScreen {
   final AccountService _accountService = AccountService();
@@ -14,14 +15,23 @@ class AccountScreen {
   }
 
   _getAllAccounts() async {
-    List<Account> accounts = await _accountService.getAll();
-
-    for (Account account in accounts) {
-      print(account.name);
-      print(account.lastname);
-      print(account.balance);
-      print(" ");
-
+    try {
+      List<Account> accounts = await _accountService.getAll();
+      for (Account account in accounts) {
+        print(account.name);
+        print(account.lastname);
+        print(account.balance);
+        print(" ");
+      }
+    } on ClientException catch (error) {
+      print("servidor nao encontrado!");
+      print(error.message);
+      print(error.uri);
+    } on Exception catch (error) {
+      print("Houve um erro");
+      print(error.toString());
+    } finally {
+      print("${DateTime.now()} | Ocorreu uma tentativa de consulta!");
     }
   }
 
