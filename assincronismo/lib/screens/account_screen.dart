@@ -21,6 +21,7 @@ class AccountScreen {
         print(account.name);
         print(account.lastname);
         print(account.balance);
+        print(account.accountType);
         print(" ");
       }
     } on ClientException catch (error) {
@@ -42,13 +43,15 @@ class AccountScreen {
     String lastname = stdin.readLineSync().toString().trim();
     print("Digite o saldo da conta");
     String balance = stdin.readLineSync().toString().trim();
+    print("Digite o tipo da conta");
+    String accountType = stdin.readLineSync().toString().trim();
 
     Account account = Account(
-      id: DateTime.now().toString(),
-      name: name,
-      lastname: lastname,
-      balance: balance,
-    );
+        id: DateTime.now().toString(),
+        name: name,
+        lastname: lastname,
+        balance: balance,
+        accountType: accountType);
 
     await _accountService.addAccount(account: account);
   }

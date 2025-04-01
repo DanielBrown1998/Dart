@@ -5,13 +5,14 @@ class Account {
   String name;
   String lastname;
   String balance;
+  String accountType;
 
-  Account({
-    required this.id,
-    required this.name,
-    required this.lastname,
-    required this.balance,
-  });
+  Account(
+      {required this.id,
+      required this.name,
+      required this.lastname,
+      required this.balance,
+      required this.accountType});
 
   factory Account.fromMap(Map<String, dynamic> map) {
     return Account(
@@ -19,6 +20,7 @@ class Account {
       name: map['name'],
       lastname: map['lastName'],
       balance: map['balance'],
+      accountType: map['accountType'],
     );
   }
 
@@ -28,12 +30,13 @@ class Account {
       'name': name,
       'lastname': lastname,
       'balance': balance,
+      'accountType': accountType
     };
   }
 
   @override
   String toString() {
-    return 'Account{id: $id, name: $name, lastname: $lastname, balance: $balance}';
+    return 'Account{id: $id, name: $name, lastname: $lastname, balance: $balance, accountType: $accountType}';
   }
 
   @override
@@ -44,7 +47,8 @@ class Account {
         other.id == id &&
         other.name == name &&
         other.lastname == lastname &&
-        other.balance == balance;
+        other.balance == balance &&
+        other.accountType == accountType;
   }
 
   @override
@@ -57,16 +61,19 @@ class Account {
     String? name,
     String? lastname,
     String? balance,
+    String? accountType
   }) {
     return Account(
       id: id ?? this.id,
       name: name ?? this.name,
       lastname: lastname ?? this.lastname,
       balance: balance ?? this.balance,
+      accountType: accountType ?? this.accountType
     );
   }
 
   toJson() => json.encode(toMap());
 
-  factory Account.fromjson(String jsonFile) => Account.fromMap(json.decode(jsonFile));
+  factory Account.fromjson(String jsonFile) =>
+      Account.fromMap(json.decode(jsonFile));
 }
