@@ -28,29 +28,28 @@ class Transaction {
   }
 
   factory Transaction.copyWith({
-  String? id,
-  String? senderAccountId,
-  String? receiverAccountId,
-  DateTime? date,
-  double? amount,
-  double? taxes,
-  required Transaction original,
-}) {
-  return Transaction(
-    id: id ?? original.id,
-    senderAccountId: senderAccountId ?? original.senderAccountId,
-    receiverAccountId: receiverAccountId ?? original.receiverAccountId,
-    date: date ?? original.date,
-    amount: amount ?? original.amount,
-    taxes: taxes ?? original.taxes,
-  );
-}
-
-  @override
-  String toString(){
-    return "$receiverAccountId $senderAccountId";
+    String? id,
+    String? senderAccountId,
+    String? receiverAccountId,
+    DateTime? date,
+    double? amount,
+    double? taxes,
+    required Transaction original,
+  }) {
+    return Transaction(
+      id: id ?? original.id,
+      senderAccountId: senderAccountId ?? original.senderAccountId,
+      receiverAccountId: receiverAccountId ?? original.receiverAccountId,
+      date: date ?? original.date,
+      amount: amount ?? original.amount,
+      taxes: taxes ?? original.taxes,
+    );
   }
 
+  @override
+  String toString() {
+    return "$receiverAccountId $senderAccountId";
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -71,23 +70,27 @@ class Transaction {
     return jsonDecode(json);
   }
 
-  double calculateTaxesByAccount(Account account, double amount) {
+  static double calculateTaxesByAccount(Account account, double amount) {
     double tax = 0;
     if (amount > 5000) {
-      String accountType = account.accountType;
-      switch (accountType) {
-        case "Ambrosia":
-          tax += 0.005;
-          break;
-        case "Canjica":
-          tax += 0.0033;
-          break;
-        case "Pudim":
-          tax += 0.0025;
-          break;
-        case "Brigadeiro":
-          tax += 0.0001;
-          break;
+      String? accountType = account.accountType;
+      if (accountType != null) {
+        switch (accountType.toLowerCase().trim()) {
+          case "ambrosia":
+            tax += 0.005;
+            break;
+          case "canjica":
+            tax += 0.0033;
+            break;
+          case "pudim":
+            tax += 0.0025;
+            break;
+          case "brigadeiro":
+            tax += 0.0001;
+            break;
+        }
+      } else {
+        return 0;
       }
     }
     return tax;
@@ -97,8 +100,7 @@ class Transaction {
   bool operator ==(Object other) {
     return identical(this, other);
   }
+
   @override
   int get hashCode => id.hashCode;
-  
-
 }
