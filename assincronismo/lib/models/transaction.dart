@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'account.dart';
+import 'package:uuid/v1.dart' as uuid;
 
 class Transaction {
-  String id;
+  var id;
   String senderAccountId;
   String receiverAccountId;
   DateTime date;
@@ -10,7 +11,7 @@ class Transaction {
   double taxes;
 
   Transaction(
-      {required this.id,
+      {this.id = uuid.UuidV1,
       required this.amount,
       required this.receiverAccountId,
       required this.senderAccountId,

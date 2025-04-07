@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:assincronismo/api_key.dart' as key;
 import 'package:assincronismo/models/account.dart';
 
@@ -85,27 +86,31 @@ class AccountService {
         listContent.add(item.toMap());
       }
     });
-
-    http.Response response = await http.post(Uri.parse(url),
-        body: json.encode({
-          'description': 'Accounts.json',
-          'public': true,
-          'files': {
-            'accounts.json': {
-              'content': json.encode(listContent),
+    try {
+      //TODO alterar o post do gist
+      http.Response response = await http.post(Uri.parse(url),
+          body: json.encode({
+            'description': 'Accounts.json',
+            'public': true,
+            'files': {
+              'accounts.json': {
+                'content': json.encode(listContent),
+              }
             }
-          }
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${key.githubApiKey}',
-        });
-    if (response.statusCode.toString().startsWith('2')) {
-      _streamController.add(
-          "${DateTime.now()} -  Requisição de atualização do dado ${account.name} realizada com sucesso");
-    } else {
-      _streamController.add(
-          "${DateTime.now()} -  Requisição de atualização do dado ${account.name} falhou");
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ${key.githubApiKey}',
+          });
+      if (response.statusCode.toString().startsWith('2')) {
+        _streamController.add(
+            "${DateTime.now()} -  Requisição de atualização do dado ${account.name} realizada com sucesso");
+      } else {
+        _streamController.add(
+            "${DateTime.now()} -  Requisição de atualização do dado ${account.name} falhou");
+      }
+    } on HttpException catch (e) {
+      print(e.message);
     }
   }
 
