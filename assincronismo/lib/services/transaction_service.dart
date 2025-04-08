@@ -15,7 +15,7 @@ class TransactionService {
       required String idReceiver,
       required double amount}) async {
     List<Account> accounts = await accountService.getAll();
-
+    print(accounts);
     if (accounts.isEmpty) {
       throw TransactionException(message: 'No accounts found');
     }
@@ -59,12 +59,12 @@ class TransactionService {
         date: DateTime.now());
 
     idSenderAccount.balance =
-        (double.tryParse(idSenderAccount.balance)! - (amountTotal))
-            .toString();
+        (double.tryParse(idSenderAccount.balance)! - (amountTotal)).toString();
     print(idSenderAccount.balance);
 
     idReceiverAccount.balance =
-        (double.tryParse(idSenderAccount.balance)! + amountTotal-tax).toString();
+        (double.tryParse(idReceiverAccount.balance)! + amount)
+            .toString();
     print(idReceiverAccount.balance);
 
     accounts[accounts.indexWhere((element) => element.id == idReceiver)] =

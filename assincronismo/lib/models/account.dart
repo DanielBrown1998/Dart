@@ -18,7 +18,7 @@ class Account {
     return Account(
       id: map['id'],
       name: map['name'],
-      lastname: map['lastName'],
+      lastname: map['lastname'],
       balance: map['balance'],
       accountType: map['accountType'] == null? "" : map['accountType'] as String,
     );

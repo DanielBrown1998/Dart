@@ -76,18 +76,13 @@ class AccountService {
   }
 
   updateAccount(Account account) async {
-    List<Map<String, dynamic>> listContent = [];
-
-    getAll().then((listAccount) {
-      for (Account item in listAccount) {
-        if (item.id == account.id) {
-          item = account;
-        }
-        listContent.add(item.toMap());
+    List<Account> listContent = await getAll();
+    for (Account item in listContent) {
+      if (item.id == account.id) {
+        item = account;
       }
-    });
+    }
     try {
-      //TODO alterar o post do gist
       http.Response response = await http.post(Uri.parse(url),
           body: json.encode({
             'description': 'Accounts.json',
@@ -102,6 +97,7 @@ class AccountService {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ${key.githubApiKey}',
           });
+      print(response.statusCode);
       if (response.statusCode.toString().startsWith('2')) {
         _streamController.add(
             "${DateTime.now()} -  Requisição de atualização do dado ${account.name} realizada com sucesso");
