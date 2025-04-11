@@ -9,10 +9,4 @@ void main() {
     print(erro.driverName);
   }
 
-  try{
-    String password = "123456789";
-  
-  }
-
-  return;
 }
