@@ -6,20 +6,20 @@ int sumOfIntervals(List<List<int>> intervals) {
     (a, b) => a[0] != b[0] ? a[0].compareTo(b[0]) : a[1].compareTo(b[1]),
   );
   //inicializando o intervalo
-  int min_value = intervals[0][0];
-  int max_value = intervals[0][1];
-  value = max_value - min_value;
+  int minValue = intervals[0][0];
+  int maxValue = intervals[0][1];
+  value = maxValue - minValue;
 
   for (int i = 1; i < intervals.length; i++) {
-    if (intervals[i][0] >= max_value) {
+    if (intervals[i][0] >= maxValue) {
       value += intervals[i][1] - intervals[i][0];
-      max_value = intervals[i][1];
-    } else if (intervals[i][0] <= max_value) {
-      if (intervals[i][1] < max_value) {
+      maxValue = intervals[i][1];
+    } else if (intervals[i][0] <= maxValue) {
+      if (intervals[i][1] < maxValue) {
         continue;
       } else {
-        value += intervals[i][1] - max_value;
-        max_value = intervals[i][1];
+        value += intervals[i][1] - maxValue;
+        maxValue = intervals[i][1];
       }
     }
   }

@@ -105,7 +105,185 @@ String primeFactors(int n) {
   return num;
 }
 
+String intToRoman(int num) {
+  Map<String, dynamic> romanNums = {
+    "M": 1000,
+    "CM": 900,
+    'D': 500,
+    'CD': 400,
+    "C": 100,
+    "XC": 90,
+    "L": 50,
+    "XL": 40,
+    "X": 10,
+    "IX": 9,
+    "V": 5,
+    "IV": 4,
+    "III": 3,
+    "II": 2,
+    "I": 1,
+  };
+  String result = "";
+  while (num > 0) {
+    int e = 0;
+    for (int roman in romanNums.values) {
+      if (num >= roman) {
+        num -= roman;
+        result += romanNums.keys.elementAt(e);
+        break;
+      }
+      e++;
+    }
+  }
+  return result;
+}
+
+int romanToInt(String s) {
+  Map<String, dynamic> romanNums = {
+    "M": 1000,
+    "CM": 900,
+    'D': 500,
+    'CD': 400,
+    "C": 100,
+    "XC": 90,
+    "L": 50,
+    "XL": 40,
+    "X": 10,
+    "IX": 9,
+    "V": 5,
+    "IV": 4,
+    "I": 1,
+  };
+
+  num result = 0;
+  String next = "";
+  String atual = "";
+  int i = 0;
+  List<String> x = s.trim().split("");
+  while (i < (x).length) {
+    atual = x.elementAt(i);
+    next = x.elementAt(i + 1 < x.length ? i + 1 : x.length - 1);
+
+    if (romanNums[atual] < romanNums[next]) {
+      result += romanNums[atual + next];
+      i++;
+    } else if (romanNums[atual] >= romanNums[next]) {
+      result += romanNums[atual];
+    }
+    i++;
+  }
+  return result.toInt();
+}
+
+List<String> letterCombinations(String digits) {
+  if (digits.isEmpty) return [];
+
+  Map<String, List<String>> map = {
+    "2": ["a", "b", "c"],
+    "3": ["d", "e", "f"],
+    "4": ["g", "h", "i"],
+    "5": ["j", "k", "l"],
+    "6": ["m", "n", "o"],
+    "7": ["p", "q", "r", "s"],
+    "8": ["t", "u", "v"],
+    "9": ["w", "x", "y", "z"]
+  };
+
+  if (digits.length == 1) {
+    return map[digits[0]]!;
+  } else if (digits.length == 2) {
+    List<String> result = [];
+    for (String i in map[digits[0]]!) {
+      for (String j in map[digits[1]]!) {
+        result.add(i + j);
+      }
+    }
+    return result;
+  } else if (digits.length == 3) {
+    List<String> result = [];
+    for (String i in map[digits[0]]!) {
+      for (String j in map[digits[1]]!) {
+        for (String k in map[digits[2]]!) {
+          result.add(i + j + k);
+        }
+      }
+    }
+    return result;
+  } else if (digits.length == 4) {
+    List<String> result = [];
+    for (String i in map[digits[0]]!) {
+      for (String j in map[digits[1]]!) {
+        for (String k in map[digits[2]]!) {
+          for (String l in map[digits[3]]!) {
+            result.add(i + j + k + l);
+          }
+        }
+      }
+    }
+    return result;
+  }
+  return [];
+}
+
+class ListNode {
+    int val;
+    ListNode? next;
+    ListNode([this.val = 0, this.next]);
+}
+
+ListNode no = ListNode(0);
+List<int> twoNumber(List<int> listOne, List<int> listTwo) {
+  int max = [listOne.length, listTwo.length].reduce((a, b) => a > b ? a : b);
+  List<int> result = [];
+  int next = 0;
+  int uniSum = 0;
+  if (max == 0) return result; // Se ambas as listas estiverem vazias, retorna uma lista vazia
+  if (max == 1 && listOne.isEmpty) return listTwo; // Se apenas a primeira lista estiver vazia, retorna a segunda
+  if (max == 1 && listTwo.isEmpty) return listOne; // Se apenas a segunda lista estiver vazia, retorna a primeira
+  for (int i = 0; i < max; i++) {
+    if (i < listOne.length && i < listTwo.length) {
+      uniSum = listOne[i] + listTwo[i] + next;
+      if (uniSum >= 10) {
+        uniSum = uniSum % 10;
+        next = 1;
+      } else {
+        next = 0;
+      }
+      result.add(uniSum);
+    } else if (i < listOne.length && i >= listTwo.length) {
+      uniSum = listOne[i] + next;
+      if (uniSum >= 10) {
+        uniSum = uniSum % 10;
+        next = 1;
+      } else {
+        next = 0;
+      }
+      result.add(uniSum);
+    } else if (i >= listOne.length && i < listTwo.length) {
+      uniSum = listTwo[i] + next;
+      if (uniSum >= 10) {
+        uniSum = uniSum % 10;
+        next = 1;
+      } else {
+        next = 0;
+      }
+      result.add(uniSum);
+    }
+  }
+  if (next > 0) {
+    result.add(1);
+  }
+  return result;
+  }else{
+
+  }  
+}
+
 void main() {
-  print(primeFactors(2 * 2 * 2 * 2 * 2 * 2 * 3 * 3 * 3 * 5 * 7 * 11 * 19));
-  // print(formatDuration(132030240));
+  List<int> listOne = [9, 9, 1];
+  List<int> listTwo = [5, 4, 6];
+  List<int> result = twoNumber(listOne, listTwo);
+  print("List One: $listOne");
+  print("List Two: $listTwo");
+  print("Result: $result");
 }

@@ -145,10 +145,10 @@ class AccountService {
         });
     if (response.statusCode.toString().startsWith('2')) {
       _streamController.add(
-          "${DateTime.now()} -  Requisição de exclusão do dado ${id} realizada com sucesso");
+          "${DateTime.now()} -  Requisição de exclusão do dado $id realizada com sucesso");
     } else {
       _streamController.add(
-          "${DateTime.now()} -  Requisição de exclusão do dado ${id} falhou");
+          "${DateTime.now()} -  Requisição de exclusão do dado $id falhou");
     }
   }
 }
